@@ -1,0 +1,31 @@
+---
+db:
+    container_name: db
+    image: postgres:9.4
+    environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+        - POSTGRES_DB=postgres
+    ports:
+        - "5432:5432"
+haskell:
+    build: .
+    container_name: haskell
+    stdin_open: true
+    tty: true
+    command: /bin/bash
+    environment:
+        - HOST=0.0.0.0
+        - PGHOST=db
+        - PGPORT=5432
+        - PGUSER=postgres
+        - PGPASS=postgres
+        - PGDATABASE=postgres
+    volumes:
+        - ./app:/app
+        # - ./app2:/app2
+    ports:
+        - "3000:3000"
+        - "3443:3443"
+    links:
+        - db
